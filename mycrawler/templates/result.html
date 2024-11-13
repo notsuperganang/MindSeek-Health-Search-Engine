@@ -1,0 +1,48 @@
+<!-- templates/results.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ query }} - Search Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="results-header">
+        <div class="logo-small">
+            <a href="{{ url_for('home') }}">Search Engine</a>
+        </div>
+        <form action="{{ url_for('search_results') }}" method="GET" class="search-form-results">
+            <div class="search-box-results">
+                <input type="text" name="q" value="{{ query }}" required>
+                <button type="submit">Search</button>
+            </div>
+            <div class="method-select">
+                <label>
+                    <input type="radio" name="method" value="cosine" {% if method == 'cosine' %}checked{% endif %}> 
+                    Cosine Similarity
+                </label>
+                <label>
+                    <input type="radio" name="method" value="jaccard" {% if method == 'jaccard' %}checked{% endif %}> 
+                    Jaccard Similarity
+                </label>
+            </div>
+        </form>
+    </div>
+
+    <div class="results-container">
+        {% if results %}
+            {% for result in results %}
+            <div class="result-item">
+                <a href="{{ result.url }}" class="result-title">{{ result.title }}</a>
+                <div class="result-url">{{ result.url }}</div>
+                <div class="result-snippet">{{ result.content }}</div>
+                <div class="result-score">Similarity Score: {{ "%.4f"|format(result.score) }}</div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="no-results">No results found for "{{ query }}"</div>
+        {% endif %}
+    </div>
+</body>
+</html>
