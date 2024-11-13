@@ -8,41 +8,62 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div class="results-header">
-        <div class="logo-small">
-            <a href="{{ url_for('home') }}">Search Engine</a>
+    <!-- Header -->
+    <header>
+        <div class="logo">Matrix</div>
+        <div class="search">
+            <form action="{{ url_for('search_results') }}" method="GET">
+                <input type="text" name="q" value="{{ query }}" required placeholder="Search...">
+                <button type="submit">🔍</button>
+            </form>
         </div>
-        <form action="{{ url_for('search_results') }}" method="GET" class="search-form-results">
-            <div class="search-box-results">
-                <input type="text" name="q" value="{{ query }}" required>
-                <button type="submit">Search</button>
-            </div>
-            <div class="method-select">
-                <label>
-                    <input type="radio" name="method" value="cosine" {% if method == 'cosine' %}checked{% endif %}> 
-                    Cosine Similarity
-                </label>
-                <label>
-                    <input type="radio" name="method" value="jaccard" {% if method == 'jaccard' %}checked{% endif %}> 
-                    Jaccard Similarity
-                </label>
-            </div>
-        </form>
+    </header>
+
+    <!-- Slider for search results -->
+    <div class="slider">
+        <!-- List Items -->
+        <div class="list">
+            {% if results %}
+                {% for result in results %}
+                <div class="item {% if loop.index == 1 %}active{% endif %}">
+                    <div class="content">
+                        <a href="{{ result.url }}" class="result-title"><h2>{{ result.title }}</h2></a>
+                        <p class="result-url">{{ result.url }}</p>
+                        <p class="result-snippet">{{ result.content }}</p>
+                        <p class="result-score">Similarity Score: {{ "%.4f"|format(result.score) }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-results">No results found for "{{ query }}"</div>
+            {% endif %}
+        </div>
+
+        <!-- Button arrows -->
+        <div class="arrows">
+            <button id="prev"><</button>
+            <button id="next">></button>
+        </div>
+
+        <!-- Thumbnail (optional) -->
+        <div class="thumbnail">
+            {% if results %}
+                {% for result in results %}
+                <div class="item {% if loop.index == 1 %}active{% endif %}">
+                    <div class="content">
+                        <a href="{{ result.url }}" class="thumbnail-title">{{ result.title }}</a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
     </div>
 
-    <div class="results-container">
-        {% if results %}
-            {% for result in results %}
-            <div class="result-item">
-                <a href="{{ result.url }}" class="result-title">{{ result.title }}</a>
-                <div class="result-url">{{ result.url }}</div>
-                <div class="result-snippet">{{ result.content }}</div>
-                <div class="result-score">Similarity Score: {{ "%.4f"|format(result.score) }}</div>
-            </div>
-            {% endfor %}
-        {% else %}
-            <div class="no-results">No results found for "{{ query }}"</div>
-        {% endif %}
-    </div>
+    <footer>
+        <p>© 2024 All rights reserved.</p>
+    </footer>
+    
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
 </html>
