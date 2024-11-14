@@ -1,0 +1,69 @@
+<!-- templates/results.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ query }} - Search Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">Matrix</div>
+        <div class="search">
+            <form action="{{ url_for('search_results') }}" method="GET">
+                <input type="text" name="q" value="{{ query }}" required placeholder="Search...">
+                <button type="submit">🔍</button>
+            </form>
+        </div>
+    </header>
+
+    <!-- Slider for search results -->
+    <div class="slider">
+        <!-- List Items -->
+        <div class="list">
+            {% if results %}
+                {% for result in results %}
+                <div class="item {% if loop.index == 1 %}active{% endif %}">
+                    <div class="content">
+                        <a href="{{ result.url }}" class="result-title"><h2>{{ result.title }}</h2></a>
+                        <p class="result-url">{{ result.url }}</p>
+                        <p class="result-snippet">{{ result.content }}</p>
+                        <p class="result-score">Similarity Score: {{ "%.4f"|format(result.score) }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-results">No results found for "{{ query }}"</div>
+            {% endif %}
+        </div>
+
+        <!-- Button arrows -->
+        <div class="arrows">
+            <button id="prev"><</button>
+            <button id="next">></button>
+        </div>
+
+        <!-- Thumbnail (optional) -->
+        <div class="thumbnail">
+            {% if results %}
+                {% for result in results %}
+                <div class="item {% if loop.index == 1 %}active{% endif %}">
+                    <div class="content">
+                        <a href="{{ result.url }}" class="thumbnail-title">{{ result.title }}</a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2024 All rights reserved.</p>
+    </footer>
+    
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

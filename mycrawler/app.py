@@ -1,95 +1,90 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS
+# app.py
+from flask import Flask, render_template, request, jsonify
 import json
-import math
-from collections import Counter
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
+from collections import defaultdict
 
 app = Flask(__name__)
-CORS(app)
 
-# Path file untuk indeks invert dan TF-IDF
-inverted_index_file = r'D:\__mata kuliah\Penelusuran Informasi\UAS\search-engine-with-flask\mycrawler\inverted_index1.json'
-tfidf_index_file = r'D:\__mata kuliah\Penelusuran Informasi\UAS\search-engine-with-flask\mycrawler\tfidf_index1.json'
+# Load the crawled data
+with open('hasil_crawl.json', 'r', encoding='utf-8') as f:
+    crawled_data = json.load(f)
 
-# Membaca indeks dari file JSON
-with open(inverted_index_file, 'r', encoding='utf-8') as f:
-    inverted_index = json.load(f)
-
-with open(tfidf_index_file, 'r', encoding='utf-8') as f:
+# Load the TF-IDF index
+with open('tfidf_index.json', 'r', encoding='utf-8') as f:
     tfidf_index = json.load(f)
 
-stop_words = set([
-    "dan", "atau", "di", "ke", "dari", "untuk", "yang", "adalah", "pada", "dengan"
-])
+def calculate_cosine_similarity(query_vector, document_vector):
+    # Buat set dari semua term yang ada di kedua vektor
+    all_terms = set(query_vector.keys()) | set(document_vector.keys())
+    
+    # Buat vektor dengan dimensi yang sama untuk query dan dokumen
+    query_array = np.array([query_vector.get(term, 0) for term in all_terms])
+    doc_array = np.array([document_vector.get(term, 0) for term in all_terms])
+    
+    # Reshape vektor menjadi 2D array
+    query_array = query_array.reshape(1, -1)
+    doc_array = doc_array.reshape(1, -1)
+    
+    # Hitung cosine similarity
+    return cosine_similarity(query_array, doc_array)[0][0]
 
-def cosine_similarity(query_vector, doc_vector):
-    dot_product = sum(query_vector[term] * doc_vector.get(term, 0) for term in query_vector)
-    query_magnitude = math.sqrt(sum(value ** 2 for value in query_vector.values()))
-    doc_magnitude = math.sqrt(sum(value ** 2 for value in doc_vector.values()))
-    if query_magnitude == 0 or doc_magnitude == 0:
-        return 0.0
-    return dot_product / (query_magnitude * doc_magnitude)
+def calculate_jaccard_similarity(query_terms, document_terms):
+    query_set = set(query_terms.keys())
+    doc_set = set(document_terms.keys())
+    
+    intersection = len(query_set.intersection(doc_set))
+    union = len(query_set.union(doc_set))
+    
+    return intersection / union if union != 0 else 0
 
-def jaccard_similarity(query_terms, doc_terms):
-    query_set = set(query_terms)
-    doc_set = set(doc_terms)
-    intersection = query_set.intersection(doc_set)
-    union = query_set.union(doc_set)
-    return len(intersection) / len(union) if union else 0
-
-def preprocess_query(query):
-    terms = query.lower().split()
-    return [word for word in terms if word not in stop_words]
-
-def search_documents(query):
-    query_terms = preprocess_query(query)
-    query_vector = Counter(query_terms)
-    query_length = len(query_terms)
-    N = len(tfidf_index)
-    for term in query_vector:
-        df = len(inverted_index.get(term, []))
-        idf = math.log(N / df) if df else 0
-        query_vector[term] = (query_vector[term] / query_length) * idf
-
-    cosine_results = []
-    jaccard_results = []
-
-    doc_candidates = set()
+def search(query, method='cosine'):
+    # Create query vector using same terms as in documents
+    query_terms = query.lower().split()
+    query_vector = defaultdict(float)
+    
+    # Create simple TF for query
     for term in query_terms:
-        if term in inverted_index:
-            doc_candidates.update(inverted_index[term])
-
-    for doc_id in doc_candidates:
-        doc_vector = tfidf_index[doc_id]
-        cos_sim = cosine_similarity(query_vector, doc_vector)
-        cosine_results.append((doc_id, cos_sim))
-        doc_terms = doc_vector.keys()
-        jac_sim = jaccard_similarity(query_terms, doc_terms)
-        jaccard_results.append((doc_id, jac_sim))
-
-    cosine_results = sorted(cosine_results, key=lambda x: x[1], reverse=True)[:10]
-    jaccard_results = sorted(jaccard_results, key=lambda x: x[1], reverse=True)[:10]
-
-    return cosine_results, jaccard_results
+        query_vector[term] += 1
+    
+    results = []
+    
+    for url, doc_vector in tfidf_index.items():
+        if method == 'cosine':
+            similarity = calculate_cosine_similarity(query_vector, doc_vector)
+        else:  # jaccard
+            similarity = calculate_jaccard_similarity(query_vector, doc_vector)
+            
+        # Find matching document in crawled data
+        doc_data = next((doc for doc in crawled_data if doc['url'] == url), None)
+        
+        if doc_data and similarity > 0:
+            results.append({
+                'url': url,
+                'title': doc_data.get('title', ''),
+                'content': doc_data.get('content', '')[:200] + '...',  # Preview
+                'score': similarity
+            })
+    
+    # Sort by similarity score
+    results.sort(key=lambda x: x['score'], reverse=True)
+    return results[:10]  # Return top 10 results
 
 @app.route('/')
 def home():
-    return 'Selamat datang di aplikasi pencarian!'
+    return render_template('index.html')
 
 @app.route('/search')
-def search():
-    query = request.args.get('query', '')
-    if query:
-        cosine_results, jaccard_results = search_documents(query)
-        return jsonify({
-            'cosine_results': cosine_results,
-            'jaccard_results': jaccard_results
-        })
-    return jsonify({'error': 'Query tidak ditemukan'}), 400
-
-@app.route('/favicon.ico')
-def favicon():
-    return '', 204  # Tidak ada isi dan status 204 (No Content)
+def search_results():
+    query = request.args.get('q', '')
+    method = request.args.get('method', 'cosine')
+    
+    if not query:
+        return render_template('index.html')
+    
+    results = search(query, method)
+    return render_template('result.html', query=query, results=results, method=method)
 
 if __name__ == '__main__':
     app.run(debug=True)
