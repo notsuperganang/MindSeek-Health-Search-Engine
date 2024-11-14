@@ -6,7 +6,7 @@ import os
 class CustomHealthArticleSpider(scrapy.Spider):
     name = "custom_health_article_spider"
     link_count = 0
-    max_links = 3000  # Batas maksimum link yang akan di-crawl
+    max_links = 10  # Batas maksimum link yang akan di-crawl
 
     # Regex untuk menyaring URL berdasarkan robots.txt dan hanya mengikuti yang tidak dilarang
     allowed_pattern = r"^https://www\.halodoc\.com/artikel(/.*)?$"
@@ -25,10 +25,10 @@ class CustomHealthArticleSpider(scrapy.Spider):
     ]
 
     # Path output untuk menyimpan hasil dalam JSON
-    output_path = r"F:\semester 5\PI\project\mycrawler\mycrawler\hasil_crawl.json"
+    output_path = r"D:\__mata kuliah\Penelusuran Informasi\UAS\search-engine-with-flask\mycrawler\spiders\hasil_crawl1.json"
 
     def start_requests(self):
-        file_path = r"F:\semester 5\PI\project\mycrawler\mycrawler\spiders\crawled_articles.txt"
+        file_path = r"D:\__mata kuliah\Penelusuran Informasi\UAS\search-engine-with-flask\mycrawler\spiders\crawled_articles1.txt"
         if os.path.exists(file_path):
             with open(file_path, "r") as file:
                 start_urls = [line.strip() for line in file if line.strip()]

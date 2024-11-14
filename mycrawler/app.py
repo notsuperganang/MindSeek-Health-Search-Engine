@@ -8,8 +8,8 @@ app = Flask(__name__)
 CORS(app)
 
 # Path file untuk indeks invert dan TF-IDF
-inverted_index_file = r'/home/notsuperganang/Documents/Kuliah/Semester 5/PI/MK/project-UAS/project/mycrawler/mycrawler/inverted_index.json'
-tfidf_index_file = r'/home/notsuperganang/Documents/Kuliah/Semester 5/PI/MK/project-UAS/project/mycrawler/mycrawler/tfidf_index.json'
+inverted_index_file = r'D:\__mata kuliah\Penelusuran Informasi\UAS\search-engine-with-flask\mycrawler\inverted_index1.json'
+tfidf_index_file = r'D:\__mata kuliah\Penelusuran Informasi\UAS\search-engine-with-flask\mycrawler\tfidf_index1.json'
 
 # Membaca indeks dari file JSON
 with open(inverted_index_file, 'r', encoding='utf-8') as f:
