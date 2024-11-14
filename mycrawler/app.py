@@ -4,6 +4,7 @@ import json
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 from collections import defaultdict
+import random
 
 app = Flask(__name__)
 
@@ -14,6 +15,33 @@ with open('hasil_crawl.json', 'r', encoding='utf-8') as f:
 # Load the TF-IDF index
 with open('tfidf_index.json', 'r', encoding='utf-8') as f:
     tfidf_index = json.load(f)
+
+def extract_tags(content):
+    # Simple tag extraction based on common categories in the content
+    common_categories = ['Penyakit', 'Kesehatan', 'Kecantikan', 'Gizi', 'Olahraga', 'Lifestyle']
+    found_tags = []
+    
+    for category in common_categories:
+        if category.lower() in content.lower():
+            found_tags.append(category)
+    
+    return found_tags[:3]  # Limit to 3 tags
+
+def prepare_article_data(articles):
+    prepared_articles = []
+    for article in articles:
+        if article['title'] and article['content']:
+            tags = extract_tags(article['content'])
+            prepared_articles.append({
+                'title': article['title'].strip(),
+                'url': article['url'],
+                'content': article['content'].strip(),
+                'tags': tags or ['Artikel']  # Default tag if none found
+            })
+    # Shuffle the articles to get random ones each time
+    random.shuffle(prepared_articles)
+    return prepared_articles
+
 
 def calculate_cosine_similarity(query_vector, document_vector):
     # Buat set dari semua term yang ada di kedua vektor
@@ -73,7 +101,9 @@ def search(query, method='cosine'):
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    # Prepare articles for homepage
+    articles = prepare_article_data(crawled_data)
+    return render_template('index.html', articles=articles)
 
 @app.route('/search')
 def search_results():

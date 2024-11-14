@@ -1,158 +1,256 @@
-<!--index.html-->
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Search Engine</title>
     <style>
-      body {
-        margin: 0;
-        padding: 0;
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        font-family: Arial, sans-serif;
-        background-color: #202124;
-        color: white;
-      }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #202124;
+            color: white;
+        }
 
-      .logo-container {
-        margin-top: 15vh;
-        margin-bottom: 20px;
-      }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 20px;
+            min-height: 100vh;
+        }
 
-      .logo {
-        font-size: 5rem;
-        font-weight: 500;
-        color: white;
-        margin-bottom: 30px;
-      }
+        .logo-container {
+            margin-top: 50px;
+            margin-bottom: 20px;
+        }
 
-      .search-container {
-        width: 100%;
-        max-width: 584px;
-        margin: 0 auto;
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
+        .logo {
+            font-size: 5rem;
+            font-weight: 500;
+            color: white;
+            margin-bottom: 30px;
+        }
 
-      .search-box-wrapper {
-        width: 100%;
-        position: relative;
-      }
+        .search-container {
+            width: 100%;
+            max-width: 584px;
+            margin: 0 auto;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-      .search-box {
-        width: 100%;
-        padding: 14px 45px;
-        font-size: 16px;
-        border: 1px solid #5f6368;
-        border-radius: 24px;
-        background-color: transparent;
-        color: white;
-        outline: none;
-        box-sizing: border-box;
-      }
+        .search-box-wrapper {
+            width: 100%;
+            position: relative;
+        }
 
-      .search-box:hover,
-      .search-box:focus {
-        background-color: #303134;
-        border-color: #303134;
-        box-shadow: 0 1px 6px 0 rgba(32, 33, 36, 0.28);
-      }
+        .search-box {
+            width: 100%;
+            padding: 14px 45px;
+            font-size: 16px;
+            border: 1px solid #5f6368;
+            border-radius: 24px;
+            background-color: transparent;
+            color: white;
+            outline: none;
+            box-sizing: border-box;
+        }
 
-      .search-icon {
-        position: absolute;
-        left: 15px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #9aa0a6;
-        width: 20px;
-        height: 20px;
-        display: flex;
-        align-items: center;
-      }
+        .search-box:hover,
+        .search-box:focus {
+            background-color: #303134;
+            border-color: #303134;
+            box-shadow: 0 1px 6px 0 rgba(32, 33, 36, 0.28);
+        }
 
-      .buttons-container {
-        margin-top: 30px;
-        display: flex;
-        gap: 12px;
-        justify-content: center;
-      }
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9aa0a6;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+        }
 
-      .search-button {
-        background-color: #303134;
-        border: 1px solid #303134;
-        border-radius: 8px; /* Membuat tombol lebih rounded */
-        color: white;
-        font-size: 14px;
-        padding: 8px 16px;
-        cursor: pointer;
-        transition: all 0.2s;
-      }
+        .buttons-container {
+            margin-top: 30px;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
 
-      .search-button:hover {
-        border: 1px solid #5f6368;
-        box-shadow: 0 1px 3px rgba(23, 23, 23, 0.24);
-      }
+        .search-button {
+            background-color: #303134;
+            border: 1px solid #303134;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
 
-      .search-button.active {
-        background-color: #8ab4f8;
-        color: #202124;
-        border-color: #8ab4f8;
-      }
+        .search-button:hover {
+            border: 1px solid #5f6368;
+            box-shadow: 0 1px 3px rgba(23, 23, 23, 0.24);
+        }
+
+        .articles-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-bottom: 50px;
+        }
+
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        .article-card {
+            background-color: #303134;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.2s;
+            cursor: pointer;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .article-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .article-image {
+            width: 100%;
+            height: 200px;
+            background-color: #4285f4;
+        }
+
+        .article-content {
+            padding: 16px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .article-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: white;
+        }
+
+        .article-tags {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background-color: #4285f4;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .article-description {
+            font-size: 14px;
+            color: #9aa0a6;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            flex-grow: 1;
+        }
+
+        @media (max-width: 1024px) {
+            .articles-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .articles-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .logo {
+                font-size: 3rem;
+            }
+
+            .buttons-container {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .search-button {
+                width: 100%;
+            }
+        }
     </style>
-  </head>
-  <body>
-    <div class="logo-container">
-      <div class="logo">Search</div>
-    </div>
-
-    <form action="/search" method="GET" class="search-container">
-      <div class="search-box-wrapper">
-        <div class="search-icon">
-          <svg
-            viewBox="0 0 24 24"
-            width="20"
-            height="20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
-              fill="#9aa0a6"
-            />
-          </svg>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <div class="logo">Search</div>
         </div>
-        <input
-          type="text"
-          name="q"
-          class="search-box"
-          placeholder="Search..."
-          autofocus
-        />
-      </div>
 
-      <div class="buttons-container">
-        <button
-          type="submit"
-          name="method"
-          value="cosine"
-          class="search-button"
-        >
-          Cosine Similarity
-        </button>
-        <button
-          type="submit"
-          name="method"
-          value="jaccard"
-          class="search-button"
-        >
-          Jaccard Similarity
-        </button>
-      </div>
-    </form>
-  </body>
+        <form action="/search" method="GET" class="search-container">
+            <div class="search-box-wrapper">
+                <div class="search-icon">
+                    <svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                            fill="#9aa0a6" />
+                    </svg>
+                </div>
+                <input type="text" name="q" class="search-box" placeholder="Search..." autofocus />
+            </div>
+
+            <div class="buttons-container">
+                <button type="submit" name="method" value="cosine" class="search-button">
+                    Cosine Similarity
+                </button>
+                <button type="submit" name="method" value="jaccard" class="search-button">
+                    Jaccard Similarity
+                </button>
+            </div>
+        </form>
+
+        <div class="articles-container">
+            <div class="articles-grid">
+                {% for article in articles[:9] %}
+                <div class="article-card" onclick="window.location.href='{{ article.url }}'">
+                    <div class="article-image"></div>
+                    <div class="article-content">
+                        <div class="article-title">{{ article.title }}</div>
+                        <div class="article-tags">
+                            {% for tag in article.tags %}
+                            <span class="tag">{{ tag }}</span>
+                            {% endfor %}
+                        </div>
+                        <div class="article-description">
+                            {{ article.content[:200] + '...' if article.content else '' }}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
 </html>
