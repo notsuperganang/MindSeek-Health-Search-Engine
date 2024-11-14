@@ -10,7 +10,7 @@ class HealthArticleSpider(scrapy.Spider):
         "https://www.halodoc.com/kesehatan/olahraga"
     ]
     link_count = 0
-    max_links_per_url = 2000  # Batas maksimum link untuk setiap URL awal
+    max_links_per_url = 10  # Batas maksimum link untuk setiap URL awal
     current_index = 0  # Indeks URL awal yang sedang diproses
     
     # Regex untuk menyaring URL berdasarkan robots.txt dan hanya mengikuti yang tidak dilarang
@@ -46,7 +46,7 @@ class HealthArticleSpider(scrapy.Spider):
             return
 
         # Menyimpan URL halaman artikel yang di-crawl ke file txt
-        with open("crawled_articles.txt", "a") as f:
+        with open("crawled_articles1.txt", "a") as f:
             f.write(response.url + "\n")
 
         # Tambah hitungan link yang telah di-crawl
