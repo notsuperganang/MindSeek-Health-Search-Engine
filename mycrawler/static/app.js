@@ -1,8 +1,8 @@
 // Static/app.js
 
 document.addEventListener("DOMContentLoaded", () => {
-    const items = document.querySelectorAll(".slider .list .item");
-    const thumbnails = document.querySelectorAll(".thumbnail .item");
+    const items = document.querySelectorAll("#slider #list #item");
+    const thumbnails = document.querySelectorAll("#thumbnail #item");
     let index = 0;
 
     document.getElementById("next").addEventListener("click", () => {
