@@ -4,7 +4,7 @@ from collections import defaultdict, Counter
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 
 # Muat data dari file JSON
-file_path = r'F:\semester 5\PI\project\mycrawler\mycrawler\hasil_crawl.json'
+file_path = r'F:\semester 5\PI\project akhir pi\search-engine-with-flask\mycrawler\hasil_crawl.json'
 with open(file_path, 'r', encoding='utf-8') as file:
     data = json.load(file)
 
@@ -68,8 +68,8 @@ inverted_index = {term: list(docs) for term, docs in inverted_index.items()}
 tfidf_index = dict(tfidf_index)
 
 # Menyimpan hasil indeks invert dan TF-IDF ke file JSON
-inverted_index_file = r'F:\semester 5\PI\project\mycrawler\mycrawler\inverted_index.json'
-tfidf_index_file = r'F:\semester 5\PI\project\mycrawler\mycrawler\tfidf_index.json'
+inverted_index_file = r'F:\semester 5\PI\project akhir pi\search-engine-with-flask\mycrawler\inverted_index.json'
+tfidf_index_file = r'F:\semester 5\PI\project akhir pi\search-engine-with-flask\mycrawler\tfidf_index.json'
 
 # Menyimpan indeks invert ke file JSON
 with open(inverted_index_file, 'w', encoding='utf-8') as f:

@@ -3,8 +3,8 @@ import math
 from collections import Counter
 
 # Path file untuk indeks invert dan TF-IDF
-inverted_index_file = r'/home/notsuperganang/Documents/Kuliah/Semester 5/PI/MK/project-UAS/project/mycrawler/mycrawler/inverted_index.json'
-tfidf_index_file = r'/home/notsuperganang/Documents/Kuliah/Semester 5/PI/MK/project-UAS/project/mycrawler/mycrawler/tfidf_index.json'
+inverted_index_file = r'F:\semester 5\PI\project akhir pi\search-engine-with-flask\mycrawler\inverted_index.json'
+tfidf_index_file = r'F:\semester 5\PI\project akhir pi\search-engine-with-flask\mycrawler\tfidf_index.json'
 
 # Membaca indeks dari file JSON
 with open(inverted_index_file, 'r', encoding='utf-8') as f:
@@ -83,7 +83,7 @@ def search_documents(query):
     return cosine_results, jaccard_results
 
 # Contoh penggunaan
-query = "makanan untuk diet"
+query = "makanan yang meningkatkan mood positif"
 cosine_results, jaccard_results = search_documents(query)
 
 # Tampilkan hasil
