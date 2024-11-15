@@ -1,67 +1,63 @@
-let items = document.querySelectorAll('.slider .list .item');
-let next = document.getElementById('next');
-let prev = document.getElementById('prev');
-let thumbnails = document.querySelectorAll('.thumbnail .item');
-
-let itemActive = 0;
-let countItem = items.length;
-
-// Fungsi untuk menampilkan slider aktif
-function showSlider() {
-    // Hapus kelas 'active' dari item dan thumbnail sebelumnya
-    document.querySelector('.slider .list .item.active').classList.remove('active');
-    document.querySelector('.thumbnail .item.active').classList.remove('active');
-
-    // Tambahkan kelas 'active' ke item dan thumbnail yang baru
-    items[itemActive].classList.add('active');
-    thumbnails[itemActive].classList.add('active');
-
-    // Perbarui posisi thumbnail
-    setPositionThumbnail();
-
-    // Reset interval otomatis
-    resetAutoPlay();
-}
-
-// Fungsi untuk mengatur posisi thumbnail agar terlihat
-function setPositionThumbnail() {
-    let activeThumbnail = thumbnails[itemActive];
-    activeThumbnail.scrollIntoView({ behavior: 'smooth', inline: 'center' });
-}
-
-// Fungsi untuk navigasi tombol Next
-next.onclick = function() {
-    itemActive = (itemActive + 1) % countItem;
-    showSlider();
-}
-
-// Fungsi untuk navigasi tombol Prev
-prev.onclick = function() {
-    itemActive = (itemActive - 1 + countItem) % countItem;
-    showSlider();
-}
-
-// Event klik pada thumbnail untuk menampilkan item slider
-thumbnails.forEach((thumbnail, index) => {
-    thumbnail.onclick = function() {
-        itemActive = index;
-        showSlider();
-    }
-});
-
-// Fungsi autoplay slider setiap 5 detik
-let autoPlayInterval = setInterval(() => next.click(), 5000);
-
-// Fungsi untuk mereset autoplay interval
-function resetAutoPlay() {
-    clearInterval(autoPlayInterval);
-    autoPlayInterval = setInterval(() => next.click(), 5000);
-}
-
 document.addEventListener("DOMContentLoaded", function() {
     let items = document.querySelectorAll('.slider .list .item');
     let next = document.getElementById('next');
     let prev = document.getElementById('prev');
-    // (Kode JavaScript lainnya)
-});
+    let thumbnails = document.querySelectorAll('.thumbnail .item');
+    
+    let countItem = items.length;
+    let itemActive = 0;
 
+    // Event Next Click
+    next.onclick = function() {
+        itemActive = (itemActive + 1) % countItem;
+        showSlider();
+    };
+
+    // Event Prev Click
+    prev.onclick = function() {
+        itemActive = (itemActive - 1 + countItem) % countItem;
+        showSlider();
+    };
+
+    // Auto Run Slider
+    let refreshInterval = setInterval(() => {
+        next.click();
+    }, 5000);
+
+    // Function to Show Slider
+    function showSlider() {
+        // Remove old active item
+        let itemActiveOld = document.querySelector('.slider .list .item.active');
+        let thumbnailActiveOld = document.querySelector('.thumbnail .item.active');
+        itemActiveOld.classList.remove('active');
+        thumbnailActiveOld.classList.remove('active');
+
+        // Set new active item
+        items[itemActive].classList.add('active');
+        thumbnails[itemActive].classList.add('active');
+        setPositionThumbnail();
+
+        // Reset Auto Run
+        clearInterval(refreshInterval);
+        refreshInterval = setInterval(() => {
+            next.click();
+        }, 5000);
+    }
+
+    // Set Position Thumbnail
+    function setPositionThumbnail() {
+        let thumbnailActive = document.querySelector('.thumbnail .item.active');
+        let rect = thumbnailActive.getBoundingClientRect();
+        if (rect.left < 0 || rect.right > window.innerWidth) {
+            thumbnailActive.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+        }
+    }
+
+    // Click Thumbnail
+    thumbnails.forEach((thumbnail, index) => {
+        thumbnail.addEventListener('click', () => {
+            itemActive = index;
+            showSlider();
+        });
+    });
+});

@@ -21,44 +21,33 @@
 
     <!-- Slider for search results -->
     <div class="slider">
-        <!-- List Items -->
         <div class="list">
-            {% if results %}
-                {% for result in results %}
-                <div class="item {% if loop.index == 1 %}active{% endif %}">
-                    <img src="{{ result.image_url }}">
-                    <div class="content">
-                        <p>{{ result.category }}</p>
-                        <h2>{{ result.title }}</h2>
-                        <p>{{ result.content }}</p>
-                    </div>
+            {% for result in results %}
+            <div class="item {% if loop.first %}active{% endif %}">
+                <img src="image{{ loop.index }}.jpg" alt="{{ result.title }}">
+                <div class="content">
+                    <p>Design</p>
+                    <h2>{{ result.title }}</h2>
+                    <p>{{ result.content }}</p>
                 </div>
-                {% endfor %}
-            {% else %}
-                <div class="no-results">No results found for "{{ query }}"</div>
-            {% endif %}
+            </div>
+            {% endfor %}
         </div>
-    
-        <!-- Button arrows -->
         <div class="arrows">
             <button id="prev">&#10094;</button>
             <button id="next">&#10095;</button>
         </div>
-    
-        <!-- Thumbnail -->
-        <div class="thumbnail">
-            {% if results %}
-                {% for result in results %}
-                <div class="item {% if loop.index == 1 %}active{% endif %}">
-                    <img src="{{ result.image_url }}">
-                    <div class="content">
-                        {{ result.title }}
-                    </div>
-                </div>
-                {% endfor %}
-            {% endif %}
-        </div>
     </div>
+    
+    <div class="thumbnail">
+        {% for result in results %}
+        <div class="item {% if loop.index == 1 %}active{% endif %}">
+            <img src="image{{ loop.index }}.jpg" alt="Thumbnail {{ loop.index }}">
+            <p>{{ result.name }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    
     
     <footer>
         <p>© 2024 All rights reserved.</p>
