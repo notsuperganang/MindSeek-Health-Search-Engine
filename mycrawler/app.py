@@ -35,73 +35,53 @@ def prepare_article_data(articles):
             prepared_articles.append({
                 'title': article['title'].strip(),
                 'url': article['url'],
-                'content': article['content'].strip(),
-                'tags': tags or ['Artikel']  # Default tag if none found
+                'content': article['content'].strip()[:200] + '...',  # Preview
+                'tags': tags or ['Artikel'],  # Default tag if none found
+                'date': article.get('date', 'N/A'),  # Add date
+                'image_url': article.get('image_url', '')  # Add image URL
             })
-    # Shuffle the articles to get random ones each time
     random.shuffle(prepared_articles)
     return prepared_articles
 
-
 def calculate_cosine_similarity(query_vector, document_vector):
-    # Buat set dari semua term yang ada di kedua vektor
     all_terms = set(query_vector.keys()) | set(document_vector.keys())
-    
-    # Buat vektor dengan dimensi yang sama untuk query dan dokumen
     query_array = np.array([query_vector.get(term, 0) for term in all_terms])
     doc_array = np.array([document_vector.get(term, 0) for term in all_terms])
-    
-    # Reshape vektor menjadi 2D array
     query_array = query_array.reshape(1, -1)
     doc_array = doc_array.reshape(1, -1)
-    
-    # Hitung cosine similarity
     return cosine_similarity(query_array, doc_array)[0][0]
 
 def calculate_jaccard_similarity(query_terms, document_terms):
     query_set = set(query_terms.keys())
     doc_set = set(document_terms.keys())
-    
     intersection = len(query_set.intersection(doc_set))
     union = len(query_set.union(doc_set))
-    
     return intersection / union if union != 0 else 0
 
 def search(query, method='cosine'):
-    # Create query vector using same terms as in documents
     query_terms = query.lower().split()
     query_vector = defaultdict(float)
-    
-    # Create simple TF for query
     for term in query_terms:
         query_vector[term] += 1
     
     results = []
-    
     for url, doc_vector in tfidf_index.items():
-        if method == 'cosine':
-            similarity = calculate_cosine_similarity(query_vector, doc_vector)
-        else:  # jaccard
-            similarity = calculate_jaccard_similarity(query_vector, doc_vector)
-            
-        # Find matching document in crawled data
+        similarity = calculate_cosine_similarity(query_vector, doc_vector) if method == 'cosine' else calculate_jaccard_similarity(query_vector, doc_vector)
         doc_data = next((doc for doc in crawled_data if doc['url'] == url), None)
-        
         if doc_data and similarity > 0:
             results.append({
                 'url': url,
                 'title': doc_data.get('title', ''),
                 'content': doc_data.get('content', '')[:200] + '...',  # Preview
-                'score': similarity
+                'score': similarity,
+                'date': doc_data.get('date', 'N/A'),  # Add date
+                'image_url': doc_data.get('image_url', '')  # Add image URL
             })
-    
-    # Sort by similarity score
     results.sort(key=lambda x: x['score'], reverse=True)
-    return results[:10]  # Return top 10 results
+    return results[:10]
 
 @app.route('/')
 def home():
-    # Prepare articles for homepage
     articles = prepare_article_data(crawled_data)
     return render_template('index.html', articles=articles)
 
@@ -109,10 +89,8 @@ def home():
 def search_results():
     query = request.args.get('q', '')
     method = request.args.get('method', 'cosine')
-    
     if not query:
         return render_template('index.html')
-    
     results = search(query, method)
     return render_template('result.html', query=query, results=results, method=method)
 
