@@ -12,43 +12,46 @@
     <header>
         <div class="logo">Matrix</div>
         <div class="search">
-            <form action="{{ url_for('search_results') }}" method="GET">
-                <input type="text" name="q" value="{{ query }}" required placeholder="Search...">
-                <button type="submit">🔍</button>
+            <form action="{{ url_for('search_results') }}" method="GET" class="search-container">
+                <div class="search-box-wrapper">
+                    <input type="text" name="q" value="{{ query }}" required placeholder="Search..." class="search-box">
+                </div>
+                <div class="buttons-container">
+                    <button type="submit" name="method" value="cosine" class="search-button">Cosine Similarity</button>
+                    <button type="submit" name="method" value="jaccard" class="search-button">Jaccard Similarity</button>
+                </div>
             </form>
         </div>
     </header>
 
     <!-- Slider for search results -->
     <div class="slider">
-    <div class="list">
-        {% for result in results %}
-        <div class="item {% if loop.first %}active{% endif %}">
-            <!-- Display image -->
-            <img src="{{ result.image_url }}" alt="{{ result.title }}">
-            <div class="content">
-                <!-- Display category or tags as a label -->
-                <p>{{ result.tags[0] if result.tags else 'Artikel' }}</p>
-                <!-- Display title -->
-                <h2 class="animate">{{ result.title }}</h2>
-                <!-- Display content preview -->
-                <p class="animate">{{ result.content }}</p>
-                <!-- Display article date -->
-                <small class="animate">{{ result.date }}</small>
-                <!-- Button for navigating to the URL -->
-                <a href="{{ result.url }}" class="btn animate" target="_blank">Go to Page</a>
+        <div class="list">
+            {% for result in results %}
+            <div class="item {% if loop.first %}active{% endif %}">
+                <!-- Display image -->
+                <img src="{{ result.image_url }}" alt="{{ result.title }}">
+                <div class="content">
+                    <!-- Display category or tags as a label -->
+                    <p>{{ result.tags[0] if result.tags else 'Artikel' }}</p>
+                    <!-- Display title -->
+                    <h2 class="animate">{{ result.title }}</h2>
+                    <!-- Display content preview -->
+                    <p class="animate">{{ result.content }}</p>
+                    <!-- Display article date -->
+                    <small class="animate">{{ result.date }}</small>
+                    <!-- Button for navigating to the URL -->
+                    <a href="{{ result.url }}" class="btn animate" target="_blank">Go to Page</a>
+                </div>
             </div>
+            {% endfor %}
         </div>
-        {% endfor %}
+        <div class="arrows">
+            <button id="prev">&#10094;</button>
+            <button id="next">&#10095;</button>
+        </div>
     </div>
-    <div class="arrows">
-        <button id="prev">&#10094;</button>
-        <button id="next">&#10095;</button>
-    </div>
-</div>
 
-    
-    
     <!-- Thumbnails for navigation -->
     <div class="thumbnail">
         {% for result in results %}
