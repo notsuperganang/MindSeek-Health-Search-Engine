@@ -21,27 +21,33 @@
 
     <!-- Slider for search results -->
     <div class="slider">
-        <div class="list">
-            {% for result in results %}
-            <div class="item {% if loop.first %}active{% endif %}">
-                <!-- Display image from result data -->
-                <img src="{{ result.image_url }}" alt="{{ result.title }}">
-                <div class="content">
-                    <!-- Display category or tags as a label -->
-                    <p>{{ result.tags[0] if result.tags else 'Artikel' }}</p>
-                    <h2>{{ result.title }}</h2>
-                    <p>{{ result.content }}</p>
-                    <!-- Display article date -->
-                    <small>{{ result.date }}</small>
-                </div>
+    <div class="list">
+        {% for result in results %}
+        <div class="item {% if loop.first %}active{% endif %}">
+            <!-- Display image -->
+            <img src="{{ result.image_url }}" alt="{{ result.title }}">
+            <div class="content">
+                <!-- Display category or tags as a label -->
+                <p>{{ result.tags[0] if result.tags else 'Artikel' }}</p>
+                <!-- Display title -->
+                <h2 class="animate">{{ result.title }}</h2>
+                <!-- Display content preview -->
+                <p class="animate">{{ result.content }}</p>
+                <!-- Display article date -->
+                <small class="animate">{{ result.date }}</small>
+                <!-- Button for navigating to the URL -->
+                <a href="{{ result.url }}" class="btn animate" target="_blank">Go to Page</a>
             </div>
-            {% endfor %}
         </div>
-        <div class="arrows">
-            <button id="prev">&#10094;</button>
-            <button id="next">&#10095;</button>
-        </div>
+        {% endfor %}
     </div>
+    <div class="arrows">
+        <button id="prev">&#10094;</button>
+        <button id="next">&#10095;</button>
+    </div>
+</div>
+
+    
     
     <!-- Thumbnails for navigation -->
     <div class="thumbnail">
@@ -49,14 +55,13 @@
         <div class="item {% if loop.index == 1 %}active{% endif %}">
             <img src="{{ result.image_url }}" alt="Thumbnail {{ loop.index }}">
             <div class="content">
-                <p>Result {{ loop.index }}</p> <!-- Menampilkan teks Result + nomor urut -->
+                <!-- Display cosine or jaccard score -->
+                <p>Score: {{ result.score | round(3) }}</p>
             </div>
         </div>
         {% endfor %}
     </div>
-    
-
-    
+        
     <footer>
         <p>© 2024 All rights reserved.</p>
     </footer>
