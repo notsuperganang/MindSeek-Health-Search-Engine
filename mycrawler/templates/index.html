@@ -136,8 +136,35 @@
             width: 100%;
             height: 200px;
             background-color: #4285f4;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
 
+        .view-more-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            margin-bottom: 40px;
+        }
+    
+        .view-more-button {
+            background-color: #4285f4;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 24px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s;
+            text-decoration: none;
+        }   
+    
+        .view-more-button:hover {
+            background-color: #357abd;
+            transform: translateY(-2px);
+        }
         .article-content {
             padding: 16px;
             flex-grow: 1;
@@ -233,9 +260,9 @@
 
         <div class="articles-container">
             <div class="articles-grid">
-                {% for article in articles[:9] %}
+                {% for article in articles %}
                 <div class="article-card" onclick="window.location.href='{{ article.url }}'">
-                    <div class="article-image"></div>
+                    <div class="article-image" style="background-image: url('{{ article.image_url }}')"></div>
                     <div class="article-content">
                         <div class="article-title">{{ article.title }}</div>
                         <div class="article-tags">
@@ -250,7 +277,16 @@
                 </div>
                 {% endfor %}
             </div>
+            
+            {% if has_next %}
+            <div class="view-more-container">
+                <a href="/?page={{ current_page + 1 }}" class="view-more-button">
+                    View More
+                </a>
+            </div>
+            {% endif %}
         </div>
+    </div>
     </div>
 </body>
 </html>
