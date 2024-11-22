@@ -180,28 +180,22 @@ def calculate_jaccard_similarity(query_terms, document_terms):
 def search(query, method='cosine'):
     query_terms = query.lower().split()
     query_vector = defaultdict(float)
-    
     for term in query_terms:
         query_vector[term] += 1
     
     results = []
-    
     for url, doc_vector in tfidf_index.items():
-        if method == 'cosine':
-            similarity = calculate_cosine_similarity(query_vector, doc_vector)
-        else:  # jaccard
-            similarity = calculate_jaccard_similarity(query_vector, doc_vector)
-            
+        similarity = calculate_cosine_similarity(query_vector, doc_vector) if method == 'cosine' else calculate_jaccard_similarity(query_vector, doc_vector)
         doc_data = next((doc for doc in crawled_data if doc['url'] == url), None)
-        
         if doc_data and similarity > 0:
             results.append({
                 'url': url,
                 'title': doc_data.get('title', ''),
-                'content': doc_data.get('content', '')[:200] + '...',
-                'score': similarity
+                'content': doc_data.get('content', '')[:200] + '...',  # Preview
+                'score': similarity,
+                'date': doc_data.get('date', 'N/A'),  # Add date
+                'image_url': doc_data.get('image_url', '')  # Add image URL
             })
-    
     results.sort(key=lambda x: x['score'], reverse=True)
     return results[:10]
 
@@ -215,10 +209,8 @@ def home():
 def search_results():
     query = request.args.get('q', '')
     method = request.args.get('method', 'cosine')
-    
     if not query:
         return render_template('index.html')
-    
     results = search(query, method)
     return render_template('result.html', query=query, results=results, method=method)
 

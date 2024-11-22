@@ -29,7 +29,7 @@ class HealthArticleSpider(scrapy.Spider):
             return
 
         # Menyimpan URL halaman artikel yang di-crawl ke file txt
-        with open("crawled_articles.txt", "a") as f:
+        with open("crawled_articles1.txt", "a") as f:
             f.write(response.url + "\n")
 
         # Tambah hitungan link yang telah di-crawl
