@@ -44,18 +44,25 @@ def preprocess_query(query):
 def search_documents(query):
     query_terms = preprocess_query(query)
 
+    # Jika query kosong setelah preprocessing
+    if not query_terms:
+        return [], []
+
     # Menghitung vektor TF-IDF untuk query
     query_vector = Counter(query_terms)
     query_length = len(query_terms)
     N = len(tfidf_index)
+    
+    # Cache untuk IDF
+    idf_cache = {}
     for term in query_vector:
-        df = len(inverted_index.get(term, []))
-        idf = math.log(N / df) if df else 0
-        query_vector[term] = (query_vector[term] / query_length) * idf
+        if term not in idf_cache:
+            df = len(inverted_index.get(term, []))
+            idf_cache[term] = math.log(N / df) if df else 0
+        query_vector[term] = (query_vector[term] / query_length) * idf_cache[term]
 
-    # Menyimpan hasil pencarian untuk Cosine dan Jaccard
-    cosine_results = []
-    jaccard_results = []
+    # Menyimpan hasil pencarian
+    results = []
 
     # Periksa dokumen yang relevan berdasarkan indeks invert
     doc_candidates = set()
@@ -66,19 +73,18 @@ def search_documents(query):
     # Proses setiap dokumen kandidat
     for doc_id in doc_candidates:
         doc_vector = tfidf_index[doc_id]
-        
-        # Cosine Similarity
+
+        # Hitung Cosine dan Jaccard
         cos_sim = cosine_similarity(query_vector, doc_vector)
-        cosine_results.append((doc_id, cos_sim))
-        
-        # Jaccard Similarity
         doc_terms = doc_vector.keys()
         jac_sim = jaccard_similarity(query_terms, doc_terms)
-        jaccard_results.append((doc_id, jac_sim))
-    
-    # Urutkan hasil dan ambil 10 dokumen teratas untuk setiap metode
-    cosine_results = sorted(cosine_results, key=lambda x: x[1], reverse=True)[:10]
-    jaccard_results = sorted(jaccard_results, key=lambda x: x[1], reverse=True)[:10]
+
+        # Simpan hasil
+        results.append((doc_id, cos_sim, jac_sim))
+
+    # Urutkan hasil berdasarkan Cosine dan Jaccard
+    cosine_results = sorted(results, key=lambda x: x[1], reverse=True)[:10]
+    jaccard_results = sorted(results, key=lambda x: x[2], reverse=True)[:10]
     
     return cosine_results, jaccard_results
 
@@ -88,9 +94,9 @@ cosine_results, jaccard_results = search_documents(query)
 
 # Tampilkan hasil
 print("Hasil Pencarian Berdasarkan Cosine Similarity:")
-for doc_id, score in cosine_results:
-    print(f"Dokumen {doc_id}: Skor {score:.4f}")
+for doc_id, score_cos, _ in cosine_results:
+    print(f"Dokumen {doc_id}: Skor {score_cos:.4f}")
 
 print("\nHasil Pencarian Berdasarkan Jaccard Similarity:")
-for doc_id, score in jaccard_results:
-    print(f"Dokumen {doc_id}: Skor {score:.4f}")
+for doc_id, _, score_jac in jaccard_results:
+    print(f"Dokumen {doc_id}: Skor {score_jac:.4f}")

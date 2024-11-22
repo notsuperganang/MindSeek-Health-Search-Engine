@@ -9,6 +9,11 @@ class CustomHealthArticleSpider(scrapy.Spider):
     link_count = 0
     max_links = 2000  # Batas maksimum link yang akan di-crawl
 
+    custom_settings = {
+        'DOWNLOAD_DELAY': 0.2,  # 0.2 detik delay antar request
+        'CONCURRENT_REQUESTS': 5  # Maksimal 5 permintaan sekaligus
+    }
+
     # Regex untuk menyaring URL berdasarkan robots.txt dan hanya mengikuti yang tidak dilarang
     allowed_pattern = r"^https://www\.halodoc\.com/artikel(/.*)?$"
     disallowed_patterns = [

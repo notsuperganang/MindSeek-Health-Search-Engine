@@ -92,5 +92,16 @@ REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
 CLOSESPIDER_PAGECOUNT = 2000
+# settings.py
+
+# Batas waktu antar request
+DOWNLOAD_DELAY = 0.2  # 0.2 detik (setara dengan 5 request per detik)
+
+# Batas maksimum permintaan secara bersamaan
+CONCURRENT_REQUESTS = 5  # Sesuaikan dengan kebutuhan Anda
+
+# Pastikan spider mematuhi aturan robots.txt (opsional)
+ROBOTSTXT_OBEY = True
+
 
 
