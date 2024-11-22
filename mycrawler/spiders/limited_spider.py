@@ -32,6 +32,7 @@ class HealthArticleSpider(scrapy.Spider):
             return
 
         # Menyimpan URL halaman artikel yang di-crawl ke file txt
+
         try:
             with open(self.output_file, "a", encoding="utf-8") as f:
                 f.write(response.url + "\n")

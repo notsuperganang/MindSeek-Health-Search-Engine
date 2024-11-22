@@ -31,12 +31,12 @@ class CustomHealthArticleSpider(scrapy.Spider):
     ]
 
     # Path output untuk menyimpan hasil dalam JSON
-    output_path = r"F:\semester 5\PI\project akhir pi\search-engine-with-flask\mycrawler\hasil_crawl.json"
-    crawled_links_path = r"F:\semester 5\PI\project akhir pi\search-engine-with-flask\mycrawler\spiders\crawled_articles.txt"
+    output_path = r"F:\semester 5\PI\project\mycrawler\mycrawler\hasil_crawl.json"
 
     def start_requests(self):
-        if os.path.exists(self.crawled_links_path):
-            with open(self.crawled_links_path, "r") as file:
+        file_path = r"F:\semester 5\PI\project\mycrawler\mycrawler\spiders\crawled_articles.txt"
+        if os.path.exists(file_path):
+            with open(file_path, "r") as file:
                 start_urls = [line.strip() for line in file if line.strip()]
             for url in start_urls:
                 if re.match(self.allowed_pattern, url):
