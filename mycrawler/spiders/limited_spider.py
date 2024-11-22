@@ -23,14 +23,21 @@ class HealthArticleSpider(scrapy.Spider):
         r"/janji-medis/terdekat/"
     ]
 
+    # Path absolut untuk menyimpan file
+    output_file = r"F:\semester 5\PI\project akhir pi\search-engine-with-flask\mycrawler\spiders\crawled_articles.txt"
+
     def parse(self, response):
         # Cek apakah jumlah link yang telah di-crawl mencapai batas
         if self.link_count >= self.max_links:
             return
 
         # Menyimpan URL halaman artikel yang di-crawl ke file txt
-        with open("crawled_articles.txt", "a") as f:
-            f.write(response.url + "\n")
+        try:
+            with open(self.output_file, "a", encoding="utf-8") as f:
+                f.write(response.url + "\n")
+            self.log(f"URL disimpan: {response.url}")
+        except Exception as e:
+            self.log(f"Error menulis ke file: {e}")
 
         # Tambah hitungan link yang telah di-crawl
         self.link_count += 1
