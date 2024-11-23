@@ -21,11 +21,11 @@ except Exception as e:
 app = Flask(__name__)
 
 # Load the crawled data
-with open('hasil_crawl.json', 'r', encoding='utf-8') as f:
+with open('data/hasil_crawl.json', 'r', encoding='utf-8') as f:
     crawled_data = json.load(f)
 
 # Load the TF-IDF index
-with open('tfidf_index.json', 'r', encoding='utf-8') as f:
+with open('output_indices/tfidf_index.json', 'r', encoding='utf-8') as f:
     tfidf_index = json.load(f)
 
 def parse_date(date_str):

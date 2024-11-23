@@ -167,39 +167,14 @@ class HealthArticleSpider(scrapy.Spider):
         date_elements = response.xpath('//span[@_ngcontent-halodoc-c1151457246 and not(contains(@class, "article-page_reviewer-label"))]/text()').getall()
         date = self.extract_date(date_elements)
         
-        # Ekstrak gambar
+        # Ambil semua gambar dari halaman
         image_urls = response.css('img::attr(src)').getall()
-        image_url = self.get_first_valid_image(image_urls, response.url)
 
-        # Log debugging info
-        self.logger.info(f"Extracted content length: {len(content_text)}")
-    
-        return {
-            'title': title,
-            'url': response.url,
-            'content': content_text,
-            'date': date,
-            'image_url': image_url
-        }
-        content_text = ' '.join(content_parts)
-        content_text = content_text.strip()
+        # Filter hanya gambar yang valid, termasuk .webp
+        image_urls = [urljoin(response.url, img_url) for img_url in image_urls if img_url.endswith(('jpg', 'jpeg', 'gif', 'webp'))]
 
-        # Log untuk debugging
-        if not content_text:
-            self.logger.warning(f"Konten masih kosong untuk URL: {response.url}")
-            # Log semua konten yang ditemukan
-            self.logger.info(f"Paragraphs found: {paragraphs}")
-            self.logger.info(f"Strong texts found: {strong_texts}")
-            self.logger.info(f"List items found: {list_items}")
-            self.logger.info(f"Headings found: {headings}")
-        
-        # Ekstrak tanggal
-        date_elements = response.xpath('//span[@_ngcontent-halodoc-c1151457246 and not(contains(@class, "article-page_reviewer-label"))]/text()').getall()
-        date = self.extract_date(date_elements)
-        
-        # Ekstrak gambar
-        image_urls = response.css('img::attr(src)').getall()
-        image_url = self.get_first_valid_image(image_urls, response.url)
+        # Jika ada gambar, ambil yang pertama (atau bisa diubah sesuai kebutuhan)
+        image_url = image_urls[0] if image_urls else "URL gambar tidak tersedia"
 
         # Log debugging info
         self.logger.info(f"Extracted content length: {len(content_text)}")
