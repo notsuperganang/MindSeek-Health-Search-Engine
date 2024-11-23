@@ -1,0 +1,17 @@
+2024-11-23 23:53:51,023 - INFO - Starting TF-IDF processing
+2024-11-23 23:53:51,023 - INFO - Loading data from data/hasil_crawl.json
+2024-11-23 23:53:51,058 - INFO - Loaded 1933 documents
+2024-11-23 23:53:51,062 - DEBUG - Stop words loaded
+2024-11-23 23:53:51,062 - DEBUG - DocumentPreprocessor initialized
+2024-11-23 23:53:51,062 - DEBUG - Indices reset
+2024-11-23 23:53:51,062 - DEBUG - TFIDFProcessor initialized
+2024-11-23 23:53:51,062 - INFO - Starting document processing for 1933 documents
+2024-11-23 23:53:51,062 - DEBUG - Indices reset
+2024-11-23 23:53:51,062 - INFO - Starting first pass - building document frequencies
+2024-11-24 00:06:39,399 - INFO - Building vocabulary
+2024-11-24 00:06:39,405 - INFO - Vocabulary size: 8267
+2024-11-24 00:06:39,405 - INFO - Starting second pass - computing TF-IDF scores
+2024-11-24 00:06:42,678 - INFO - Document processing completed
+2024-11-24 00:06:42,678 - INFO - Saving indices to output_indices
+2024-11-24 00:06:43,320 - INFO - Successfully saved indices to output_indices
+2024-11-24 00:06:43,324 - INFO - Processing completed successfully
