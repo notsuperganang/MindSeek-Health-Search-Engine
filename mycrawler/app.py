@@ -188,14 +188,20 @@ def search(query, method='cosine'):
         similarity = calculate_cosine_similarity(query_vector, doc_vector) if method == 'cosine' else calculate_jaccard_similarity(query_vector, doc_vector)
         doc_data = next((doc for doc in crawled_data if doc['url'] == url), None)
         if doc_data and similarity > 0:
+            # Extract tags from content
+            content = doc_data.get('content', '')
+            tags = extract_tags(content)
+            
             results.append({
                 'url': url,
                 'title': doc_data.get('title', ''),
-                'content': doc_data.get('content', '')[:200] + '...',  # Preview
+                'content': content[:200] + '...',  # Preview
                 'score': similarity,
-                'date': doc_data.get('date', 'N/A'),  # Add date
-                'image_url': doc_data.get('image_url', '')  # Add image URL
+                'date': doc_data.get('date', 'N/A'),
+                'image_url': doc_data.get('image_url', ''),
+                'tags': tags  # Add tags to results
             })
+    
     results.sort(key=lambda x: x['score'], reverse=True)
     return results[:10]
 
@@ -211,7 +217,19 @@ def search_results():
     method = request.args.get('method', 'cosine')
     if not query:
         return render_template('index.html')
+    
     results = search(query, method)
+    
+    # Format scores as percentages and ensure all required fields exist
+    for result in results:
+        result['score'] = round(result['score'] * 100, 1)  # Convert to percentage
+        # Ensure image_url exists
+        if not result.get('image_url') or result['image_url'] == "URL gambar tidak tersedia":
+            result['image_url'] = "https://via.placeholder.com/400x200"
+        # Ensure tags exist
+        if not result.get('tags'):
+            result['tags'] = ['Artikel']
+            
     return render_template('result.html', query=query, results=results, method=method)
 
 if __name__ == '__main__':
