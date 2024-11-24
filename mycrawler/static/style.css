@@ -240,9 +240,9 @@ svg {
     bottom: 50px;
     z-index: 11;
     display: flex;
-    gap: 10px;
+    gap: 23px;
     width: 100%;
-    height: 120px;
+    height: 150px;
     padding: 0 50px;
     box-sizing: border-box;
     overflow-x: auto;
@@ -261,6 +261,7 @@ svg {
     overflow: hidden;
     flex-shrink: 0;
     transition: filter 0.5s;
+   
 }
 
 .thumbnail .item img {
@@ -270,16 +271,20 @@ svg {
     display: block;
 }
 
+.thumbnail .item:hover,
 .thumbnail .item.active {
-    filter: brightness(1.5);
+    transform: scale(1.2); /* Membesar 1.3 kali */
+    z-index: 2; /* Untuk memastikan thumbnail berada di atas lainnya */
+    transition: transform 0.3s ease; /* Smooth transition */
+    
 }
 
 .thumbnail .item .content {
     position: absolute;
     bottom: 0;
     left: 0;
-    width: 100%;
-    height: 100%; /* Full height for gradient effect */
+    width: 80%;
+    height: 80%; /* Full height for gradient effect */
     background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0) 50%);
     display: flex;
     align-items: flex-end;
@@ -287,6 +292,7 @@ svg {
     padding: 5px;
     box-sizing: border-box;
     border-radius: 10px;
+    margin-bottom:10px;
 }
 
 .thumbnail .item .content p {
