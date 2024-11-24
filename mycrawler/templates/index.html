@@ -12,6 +12,48 @@
             background-color: #202124;
             color: white;
         }
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .pagination-button {
+            text-decoration: none;
+            color: #4285f4;
+            font-size: 16px;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+
+        .pagination-button:hover {
+            background-color: #357abd;
+            color: white;
+        }
+
+        .pagination-button.active {
+            font-weight: bold;
+            color: white;
+            background-color: #357abd;
+        }
+
+        .next-button {
+            text-decoration: none;
+            color: #4285f4;
+            font-size: 16px;
+            padding: 8px 16px;
+            border-radius: 24px;
+            transition: background-color 0.3s;
+        }
+
+        .next-button:hover {
+            background-color: #357abd;
+            color: white;
+        }
+
 
         .container {
             display: flex;
@@ -259,6 +301,7 @@
         </form>
 
         <div class="articles-container">
+            <h2>Artikel Terbaru</h2>
             <div class="articles-grid">
                 {% for article in articles %}
                 <div class="article-card" onclick="window.location.href='{{ article.url }}'">
@@ -279,14 +322,34 @@
             </div>
             
             {% if has_next %}
-            <div class="view-more-container">
-                <a href="/?page={{ current_page + 1 }}" class="view-more-button">
-                    View More
-                </a>
+            <div class="pagination-container">
+                <a href="/?page=1" class="pagination-button" id="page-1">1</a>
+                <a href="/?page=2" class="pagination-button" id="page-2">2</a>
+                <a href="/?page=3" class="pagination-button" id="page-3">3</a>
+                <a href="/?page=4" class="pagination-button" id="page-4">4</a>
+                <a href="/?page=5" class="pagination-button" id="page-5">5</a>
+                <a href="/?page=6" class="pagination-button" id="page-6">6</a>
+                <a href="/?page=7" class="pagination-button" id="page-7">7</a>
+                <a href="/?page=8" class="pagination-button" id="page-8">8</a>
+                <a href="/?page=9" class="pagination-button" id="page-9">9</a>
+                <a href="/?page=10" class="pagination-button" id="page-10">10</a>
+                <a href="/?page=next" class="next-button">Berikutnya</a>
             </div>
+            
             {% endif %}
         </div>
     </div>
     </div>
 </body>
+
+<script>
+    // Mendapatkan halaman saat ini dari URL
+const urlParams = new URLSearchParams(window.location.search);
+const currentPage = urlParams.get('page') || 1; // Default ke halaman 1 jika tidak ada di URL
+
+// Menambahkan kelas 'active' pada halaman yang sesuai
+document.getElementById(`page-${currentPage}`).classList.add('active');
+
+</script>
 </html>
+
