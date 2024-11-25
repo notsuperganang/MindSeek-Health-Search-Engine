@@ -1,32 +1,77 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
+
+.page-container {
+    opacity: 0;
+    animation: fadePage 1s ease-out forwards;
+}
+
+@keyframes fadePage {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
 body {
-    font-family: Poppins, sans-serif;
+    font-family: 'Poppins', sans-serif;
     margin: 0;
-    background-color: #010101;
-    color: #eee;
+    background-color: #202124;
+    color: white;
     height: 100vh;
-    overflow: hidden;
+    overflow-y: auto; /* Ubah dari hidden ke auto */
+    overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
 header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: #222;
+    background: rgba(48, 49, 52, 0.7);
+    backdrop-filter: blur(8px);
     padding: 15px 30px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+    position: sticky; /* Tambahkan ini */
+    top: 0; /* Tambahkan ini */
+    z-index: 1000; /* Tambahkan ini - memastikan header selalu di atas konten lain */
+    transition: all 0.3s ease; /* Smooth transition untuk efek scroll */
 }
+
+/* Initial page load animation for header */
+header {
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: showHeader 0.8s ease-out forwards;
+}
+
+@keyframes showHeader {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Optional: Tambahkan efek scroll */
+header.scrolled {
+    background: rgba(48, 49, 52, 0.9); /* Sedikit lebih gelap saat di-scroll */
+    padding: 10px 30px; /* Sedikit lebih tipis saat di-scroll */
+}
+
 
 header .logo {
     font-size: 1.8em;
-    font-weight: bold;
-    color: #fff;
-    
+    font-weight: 600;
 }
+
 header .logo a {
-    text-decoration:none;
-    color: #fff;
+    text-decoration: none;
+    background: linear-gradient(135deg, #ffffff 0%, #4285f4 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 /* Header search container */
@@ -36,21 +81,31 @@ header .search {
     margin-left: 20px;
 }
 
-
 header .search form {
     display: flex;
     align-items: center;
     gap: 10px;
-    background-color: #333;
-    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(8px);
+    border-radius: 24px;
     padding: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+header .search form:hover {
+    box-shadow: 
+        0 8px 32px rgba(66, 133, 244, 0.3),
+        0 0 20px rgba(66, 133, 244, 0.4);
+    border-color: rgba(66, 133, 244, 0.3);
+    transform: translateY(-2px);
 }
 
 /* Style for search box wrapper */
 .search-box-wrapper {
     width: 100%;
-    background-color: #333;
-    border-radius: 25px;
+    background: transparent;
+    border-radius: 24px;
     overflow: hidden;
     display: flex;
 }
@@ -58,13 +113,20 @@ header .search form {
 /* Search box styling */
 header .search input[type="text"] {
     flex: 1;
-    padding: 8px 15px;
+    padding: 12px 20px;
     border: none;
-    background-color: transparent;
-    color: #eee;
+    background: rgba(48, 49, 52, 0.7);
+    color: white;
     outline: none;
     font-size: 1em;
     min-width: 200px;
+    border-radius: 24px;
+    transition: all 0.3s ease;
+}
+
+header .search input[type="text"]:focus {
+    background: rgba(48, 49, 52, 0.9);
+    box-shadow: inset 0 0 20px rgba(66, 133, 244, 0.2);
 }
 
 /* Buttons container styling */
@@ -115,7 +177,20 @@ svg {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    opacity: 0;
+    transform: scale(1.1);
+    filter: blur(10px) brightness(0);
+    transition: all 0.5s ease;
 }
+
+/* Animation untuk active slide */
+.slider .list .item.active img {
+    opacity: 1;
+    animation: showBackground 1.5s cubic-bezier(0.215, 0.610, 0.355, 1) forwards;
+    animation-delay: 0.1s; /* Mulai sedikit lebih awal dari konten lain */
+}
+
+
 
 .slider .list .item::after {
     content: '';
@@ -125,6 +200,13 @@ svg {
     left: 0;
     bottom: 0;
     background-image: linear-gradient(to top, #000 40%, transparent);
+    opacity: 0;
+    animation: showOverlay 1s ease forwards;
+    animation-delay: 0.3s; /* Mulai setelah background mulai terlihat */
+}
+
+.slider .list .item.active::after {
+    opacity: 1;
 }
 
 /* Memastikan urutan konten correct */
@@ -158,37 +240,62 @@ svg {
 
 .slider .list .item .btn {
     display: inline-block;
-    margin-top: 15px; /* Spacing dari tanggal */
-    padding: 10px 25px;
-    background-color: rgba(255, 255, 255, 0.1); /* Putih dengan opacity 10% */
-    color: white;
+    margin-top: 15px;
+    padding: 12px 24px;
+    background-color: rgba(255, 255, 255, 0.1); /* Warna asli */
+    color: white; /* Warna text asli */
     text-decoration: none;
     font-size: 0.9em;
     font-weight: 500;
     text-align: center;
     border-radius: 5px;
-    border: 1px solid rgba(255, 255, 255, 0.3); /* Stroke putih */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Border asli */
     backdrop-filter: blur(5px);
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
 }
 
 /* Hover effect */
 .slider .list .item .btn:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.5);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transform: translateY(-4px) scale(1.02);
+    border-color: rgba(66, 133, 244, 0);
+    box-shadow:
+        0 8px 32px rgba(66, 133, 244, 0.3),
+        0 0 20px rgba(66, 133, 244, 0.4),
+        0 0 40px rgba(66, 133, 244, 0.2);
 }
 
 /* Active state ketika diklik */
 .slider .list .item .btn:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 
+        0 4px 16px rgba(66, 133, 244, 0.2),
+        0 0 10px rgba(66, 133, 244, 0.3);
 }
 
+/* Optional: Tambahkan animasi gradient pada hover */
+.slider .list .item .btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg,
+        rgba(66, 133, 244, 0.8),
+        rgba(135, 206, 235, 0.8));
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    border-radius: 5px;
+    z-index: -1;
+}
 
+.slider .list .item .btn:hover::before {
+    opacity: 1;
+}
 
-
+/* Animation keyframes yang sudah ada */
 @keyframes showContent {
     to {
         transform: translateY(0);
@@ -197,122 +304,287 @@ svg {
     }
 }
 
+/* Tambahkan keyframe untuk background image */
+@keyframes showBackground {
+    from {
+        transform: scale(1.1);
+        filter: blur(10px) brightness(0);
+    }
+    to {
+        transform: scale(1);
+        filter: blur(0) brightness(1);
+    }
+}
+
+
+/* Update selectors untuk animasi */
 .slider .list .item.active p:nth-child(1),
 .slider .list .item.active h2,
-.slider .list .item.active p:nth-child(3) {
+.slider .list .item.active p:nth-child(3),
+.slider .list .item.active small,
+.slider .list .item.active .btn {
     transform: translateY(30px);
     filter: blur(20px);
     opacity: 0;
-    animation: showContent 0.5s 0.7s ease-in-out forwards;
+    animation: showContent 0.5s ease-in-out forwards;
 }
 
-.slider .list .item.active h2 {
+/* Timing untuk sequence animasi */
+.slider .list .item.active img {
+    animation-delay: 0.3s;
+}
+
+.slider .list .item.active::after {
     animation-delay: 0.5s;
 }
 
+.slider .list .item.active p:nth-child(1) {
+    animation-delay: 0.7s;
+}
+
+.slider .list .item.active h2 {
+    animation-delay: 0.9s;
+}
+
 .slider .list .item.active p:nth-child(3) {
-    animation-duration: 0.5s;
+    animation-delay: 1.1s;
+}
+
+.slider .list .item.active small {
+    animation-delay: 1.3s;
+}
+
+.slider .list .item.active .btn {
+    animation-delay: 1.5s;
+}
+
+/* Update gradient overlay animation */
+@keyframes showOverlay {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Reset transform dan opacity untuk state non-active */
+.slider .list .item p:nth-child(1),
+.slider .list .item h2,
+.slider .list .item p:nth-child(3),
+.slider .list .item small,
+.slider .list .item .btn {
+    transform: translateY(30px);
+    filter: blur(20px);
+    opacity: 0;
 }
 
 /* Style arrows */
 .arrows {
     position: absolute;
-    top: 30%;
+    top: 50%;
+    transform: translateY(-50%) translateX(30px); /* Tambah translateY untuk centering sempurna */
     right: 50px;
     z-index: 100;
+    display: flex;
+    gap: 16px;
+    opacity: 0; /* For initial animation */
+    animation: showArrows 0.5s ease-out forwards;
+    animation-delay: 1.5s; /* After all content is shown */
+}
+
+@keyframes showArrows {
+    to {
+        opacity: 1;
+        transform: translateY(-50%) translateX(0);
+    }
 }
 
 .arrows button {
-    background-color: #eee5;
-    border: none;
-    font-family: monospace;
-    width: 40px;
-    height: 40px;
-    border-radius: 5px;
-    font-size: x-large;
-    color: #eee;
-    transition: background-color 0.5s, color 0.5s;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    width: 56px; /* Lebih besar dari sebelumnya */
+    height: 56px; /* Lebih besar dari sebelumnya */
+    border-radius: 16px; /* Sesuaikan dengan ukuran yang lebih besar */
+    font-size: 1.5em; /* Font size lebih besar */
+    color: white;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    backdrop-filter: blur(4px);
+    position: relative;
+    overflow: hidden;
+    display: flex; /* Tambahkan untuk centering icon */
+    align-items: center;
+    justify-content: center;
+}
+
+.arrows button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg,
+        rgba(66, 133, 244, 0.8),
+        rgba(135, 206, 235, 0.8));
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    border-radius: 16px;
+    z-index: -1;
 }
 
 .arrows button:hover {
-    background-color: #eee;
-    color: black;
+    transform: translateY(-4px) scale(1.05);
+    border-color: rgba(66, 133, 244, 0);
+    box-shadow:
+        0 8px 32px rgba(66, 133, 244, 0.3),
+        0 0 20px rgba(66, 133, 244, 0.4),
+        0 0 40px rgba(66, 133, 244, 0.2);
+    color: white;
+}
+
+.arrows button:hover::before {
+    opacity: 1;
+}
+
+.arrows button:active {
+    transform: translateY(-2px);
+    box-shadow: 
+        0 4px 16px rgba(66, 133, 244, 0.2),
+        0 0 10px rgba(66, 133, 244, 0.3);
 }
 
 /* Style thumbnails */
 .thumbnail {
     position: fixed;
-    bottom: 50px;
+    bottom: 30px;
+    left: 50%;
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
     z-index: 11;
     display: flex;
-    gap: 23px;
-    width: 100%;
-    height: 150px;
-    padding: 0 50px;
+    gap: 20px; /* Reduced gap to fit all items */
+    padding: 20px;
+    background: rgba(48, 49, 52, 0.7);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
     box-sizing: border-box;
-    overflow-x: auto;
+    width: 90%; /* Increased width to accommodate all items */
+    max-width: 1800px; /* Maximum width for very large screens */
     justify-content: center;
+    animation: showThumbnail 0.8s ease-out forwards;
+    animation-delay: 1.3s;
+}
+
+@keyframes showThumbnail {
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
 }
 
 .thumbnail::-webkit-scrollbar {
-    width: 0;
+    display: none;
 }
 
 .thumbnail .item {
-    width: 150px;
-    height: 100px;
+    width: 140px; /* Reduced width to fit all items */
+    height: 90px; /* Adjusted height to maintain aspect ratio */
     position: relative;
-    border-radius: 10px;
+    border-radius: 12px;
     overflow: hidden;
     flex-shrink: 0;
-    transition: filter 0.5s;
-    margin-top:20px;
-    transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out; /* Transisi halus */
-   
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
 }
 
+/* Thumbnail image */
 .thumbnail .item img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block;
+    transition: all 0.4s ease;
 }
 
-.thumbnail .item:hover{
-    transform: scale(1.15); 
-    z-index: 2; 
-    filter: brightness(1.2);
+.thumbnail .item:hover {
+    transform: translateY(-4px) scale(1.05);
+    border-color: rgba(66, 133, 244, 0);
+    box-shadow:
+        0 8px 32px rgba(66, 133, 244, 0.3),
+        0 0 20px rgba(66, 133, 244, 0.4),
+        0 0 40px rgba(66, 133, 244, 0.2);
+    z-index: 2;
 }
 
+.thumbnail .item:hover img {
+    transform: scale(1.1);
+}
+
+.thumbnail .item:hover .content {
+    opacity: 1;
+}
+
+.thumbnail .item:hover .content p {
+    transform: translateY(-4px);
+    background: rgba(66, 133, 244, 0.2);
+    box-shadow: 
+        0 4px 12px rgba(66, 133, 244, 0.2),
+        0 0 8px rgba(66, 133, 244, 0.3);
+}
+
+/* Active state */
 .thumbnail .item.active {
-    transform: scale(1.15); 
-    z-index: 2; 
-    filter: brightness(1.2);
-
-    
+    transform: translateY(-4px) scale(1.05);
+    border-color: rgba(66, 133, 244, 0.3);
+    box-shadow:
+        0 8px 32px rgba(66, 133, 244, 0.3),
+        0 0 20px rgba(66, 133, 244, 0.4),
+        0 0 40px rgba(66, 133, 244, 0.2);
+    z-index: 2;
 }
+
+.thumbnail .item.active .content {
+    opacity: 1;
+}
+
+.thumbnail .item.active .content p {
+    background: rgba(66, 133, 244, 0.3);
+    color: white;
+}
+
+
 
 .thumbnail .item .content {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100%; /* Full height for gradient effect */
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0) 50%);
+    inset: 0;
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.9) 0%,
+        rgba(0, 0, 0, 0.5) 50%,
+        rgba(0, 0, 0, 0.3) 100%
+    );
     display: flex;
     align-items: flex-end;
-    justify-content: flex-end;
-    padding: 5px;
-    box-sizing: border-box;
-    border-radius: 10px;
-   
+    padding: 8px;
+    opacity: 0;
+    transition: all 0.4s ease;
 }
 
 .thumbnail .item .content p {
-    color: #fff;
+    color: #4285f4;
     font-size: 0.8em;
+    font-weight: 500;
     margin: 0;
-    font-weight: bold;
+    padding: 6px 12px;
+    background: rgba(66, 133, 244, 0.1);
+    border: 1px solid rgba(66, 133, 244, 0.3);
+    border-radius: 8px;
+    backdrop-filter: blur(4px);
+    transition: all 0.4s ease;
+    padding: 4px 8px;
 }
 
 @media screen and (max-width: 678px) {
@@ -328,21 +600,15 @@ svg {
 }
 
 /* Menyesuaikan style elemen tanggal agar konsisten */
-.slider .list .item .content .date {
+.slider .list .item .content small {
     text-transform: uppercase;
     letter-spacing: 5px;
-    color: #aaa;
+    color: #fff;
     font-size: 1em;
     margin-bottom: 10px;
     opacity: 0;
     transform: translateY(30px);
     filter: blur(20px);
-    animation: showContent 0.5s 0.5s ease-in-out forwards;
-}
-
-/* Menyesuaikan animasi untuk elemen tanggal agar muncul serentak dengan title dan content */
-.slider .list .item.active .date {
-    animation-delay: 0.5s; /* Sesuaikan jika perlu agar sinkron */
 }
 
 /* Untuk menyesuaikan posisi jika elemen tanggal perlu berada di atas title */
@@ -376,15 +642,16 @@ svg {
 
 /* Search button styling */
 .search-button {
-    padding: 8px 15px;
-    border: none;
-    background-color: #444;
-    color: white;
+    background: rgba(66, 133, 244, 0.1);
+    border: 1px solid rgba(66, 133, 244, 0.3);
+    border-radius: 12px;
+    color: #4285f4;
     font-size: 14px;
+    padding: 10px 20px;
     cursor: pointer;
-    border-radius: 20px;
     transition: all 0.3s ease;
-    white-space: nowrap;
+    backdrop-filter: blur(4px);
+    font-family: 'Poppins', sans-serif;
 }
 
 #tag {
@@ -392,11 +659,21 @@ svg {
 }
 
 .search-button:hover {
-    background-color: #555;
+    background: rgba(66, 133, 244, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 
+        0 8px 32px rgba(66, 133, 244, 0.3),
+        0 0 20px rgba(66, 133, 244, 0.4);
+    color: white;
 }
 
-.search-button:active {
-    transform: translateY(0);
+.search-button.active {
+    background: linear-gradient(135deg, #4285f4, #87CEEB);
+    color: white;
+    border: none;
+    box-shadow: 
+        0 4px 15px rgba(66, 133, 244, 0.3),
+        0 0 10px rgba(66, 133, 244, 0.4);
 }
 
 .search-button:focus {
@@ -411,6 +688,7 @@ svg {
     /* Penyesuaian ukuran font untuk elemen teks */
     header .logo {
         font-size: 2em;
+        color:#eee;
     }
 
     header .search {
@@ -473,5 +751,31 @@ svg {
         text-align: center;
         font-size: 12px;
         padding: 8px 10px;
+    }
+
+    .thumbnail {
+        padding: 15px;
+        gap: 15px;
+        bottom: 20px;
+    }
+
+    .thumbnail .item {
+        width: 140px;
+        height: 90px;
+    }
+
+    .thumbnail .item .content p {
+        font-size: 0.8em;
+        padding: 4px 8px;
+    }
+
+    .arrows {
+        right: 20px; /* Lebih dekat ke tepi untuk mobile */
+    }
+    
+    .arrows button {
+        width: 48px; /* Sedikit lebih kecil di mobile */
+        height: 48px;
+        font-size: 1.3em;
     }
 }
