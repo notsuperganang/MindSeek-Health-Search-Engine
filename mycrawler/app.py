@@ -28,6 +28,10 @@ with open('data/hasil_crawl.json', 'r', encoding='utf-8') as f:
 with open('output_indices/tfidf_index.json', 'r', encoding='utf-8') as f:
     tfidf_index = json.load(f)
 
+# Di bagian awal file, tambahkan:
+with open('output_indices/tags_index.json', 'r', encoding='utf-8') as f:
+    tags_index = json.load(f)
+    
 def parse_date(date_str):
     if date_str == "Tanggal tidak tersedia":
         return datetime.min
@@ -46,83 +50,7 @@ def clean_text(text):
     
     return text
 
-def extract_tags(content, num_tags=3):
-    # If content is empty or too short
-    if not content or len(content.split()) < 5:
-        return ['Artikel']
-        
-    # Custom stopwords combining NLTK's Indonesian and English stopwords
-    try:
-        stop_words = set(stopwords.words('indonesian') + stopwords.words('english'))
-    except:
-        stop_words = set()  # Fallback jika stopwords tidak tersedia
-    
-    # Add custom stopwords relevant to your content
-    additional_stops = {
-        'halodoc', 'artikel', 'baca', 'juga', 'dapat', 'cara', 'ada', 'bisa',
-        'saat', 'anda', 'kamu', 'ini', 'itu', 'nya', 'yah', 'ya', 'jika', 'ke',
-        'di', 'dari', 'pada', 'dalam', 'untuk', 'dengan', 'dan', 'atau', 'ini',
-        'itu', 'juga', 'sudah', 'saya', 'anda', 'dia', 'mereka', 'kita', 'akan',
-        'bisa', 'ada', 'tidak', 'saat', 'oleh', 'setelah', 'para', 'dapat', 'lain',
-        'hal', 'orang', 'waktu', 'tahun', 'cara', 'yakni', 'harus', 'selama',
-        'jakarta', 'com', 'www', 'html'
-    }
-    stop_words.update(additional_stops)
-    
-    # Clean the text
-    cleaned_text = clean_text(content)
-    
-    try:
-        # Tokenize using word_tokenize instead of punkt directly
-        tokens = nltk.word_tokenize(cleaned_text, language='indonesian')
-    except:
-        # Fallback to simple split if NLTK tokenization fails
-        tokens = cleaned_text.split()
-    
-    # Remove stopwords and short words
-    filtered_tokens = [token for token in tokens 
-                      if token not in stop_words 
-                      and len(token) > 3]  # Only keep words longer than 3 characters
-    
-    # Create document for vectorization
-    document = ' '.join(filtered_tokens)
-    
-    # Create TF-IDF vectorizer
-    vectorizer = TfidfVectorizer(
-        ngram_range=(1, 2),  # Include both unigrams and bigrams
-        max_features=50,     # Consider top 50 terms
-        stop_words=list(stop_words)
-    )
-    
-    try:
-        # Fit and transform the document
-        tfidf_matrix = vectorizer.fit_transform([document])
-        
-        # Get feature names (terms)
-        feature_names = vectorizer.get_feature_names_out()
-        
-        # Get TF-IDF scores
-        tfidf_scores = tfidf_matrix.toarray()[0]
-        
-        # Create a list of (term, score) tuples and sort by score
-        term_scores = [(term, score) 
-                      for term, score in zip(feature_names, tfidf_scores)
-                      if score > 0]  # Only keep terms with non-zero scores
-        term_scores.sort(key=lambda x: x[1], reverse=True)
-        
-        # Extract top terms as tags
-        tags = []
-        for term, _ in term_scores[:num_tags]:
-            # Capitalize first letter of each word in the tag
-            tag = ' '.join(word.capitalize() for word in term.split())
-            tags.append(tag)
-        
-        return tags if tags else ['Artikel']
-        
-    except Exception as e:
-        print(f"Error extracting tags: {e}")
-        return ['Artikel']
-
+# Modifikasi fungsi prepare_article_data:
 def prepare_article_data(articles, page=1, per_page=9):
     prepared_articles = []
     for article in articles:
@@ -131,8 +59,8 @@ def prepare_article_data(articles, page=1, per_page=9):
             if image_url == "URL gambar tidak tersedia":
                 image_url = "https://via.placeholder.com/400x200"
             
-            # Extract tags from the actual content
-            tags = extract_tags(article['content'])
+            # Get tags from index instead of extracting
+            tags = tags_index.get(article['url'], ['Artikel'])
             
             prepared_articles.append({
                 'title': article['title'].strip(),
@@ -162,6 +90,7 @@ def prepare_article_data(articles, page=1, per_page=9):
         'total_articles': total_articles
     }
 
+
 def calculate_cosine_similarity(query_vector, document_vector):
     all_terms = set(query_vector.keys()) | set(document_vector.keys())
     query_array = np.array([query_vector.get(term, 0) for term in all_terms])
@@ -188,18 +117,17 @@ def search(query, method='cosine'):
         similarity = calculate_cosine_similarity(query_vector, doc_vector) if method == 'cosine' else calculate_jaccard_similarity(query_vector, doc_vector)
         doc_data = next((doc for doc in crawled_data if doc['url'] == url), None)
         if doc_data and similarity > 0:
-            # Extract tags from content
-            content = doc_data.get('content', '')
-            tags = extract_tags(content)
+            # Get tags from index instead of extracting
+            tags = tags_index.get(url, ['Artikel'])
             
             results.append({
                 'url': url,
                 'title': doc_data.get('title', ''),
-                'content': content[:200] + '...',  # Preview
+                'content': doc_data.get('content', '')[:200] + '...',  # Preview
                 'score': similarity,
                 'date': doc_data.get('date', 'N/A'),
                 'image_url': doc_data.get('image_url', ''),
-                'tags': tags  # Add tags to results
+                'tags': tags
             })
     
     results.sort(key=lambda x: x['score'], reverse=True)
