@@ -467,7 +467,7 @@ svg {
     gap: 18px; /* Reduced gap to fit all items */
     padding: 20px;
     /* background: rgba(48, 49, 52, 0.7); */
-    backdrop-filter: blur(8px);
+    /* backdrop-filter: blur(8px); */
     /* border: 1px solid rgba(255, 255, 255, 0.1); */
     border-radius: 20px;
     box-sizing: border-box;
