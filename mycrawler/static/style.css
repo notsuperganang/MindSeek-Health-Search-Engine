@@ -18,10 +18,11 @@ header {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-header .logo {
+header .logo a {
     font-size: 1.8em;
     font-weight: bold;
     color: #fff;
+    text-decoration: none;
 }
 
 /* Header search container */
@@ -392,6 +393,7 @@ svg {
     /* Penyesuaian ukuran font untuk elemen teks */
     header .logo {
         font-size: 2em;
+        color:#eee;
     }
 
     header .search {
