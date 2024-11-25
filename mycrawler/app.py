@@ -82,14 +82,25 @@ def prepare_article_data(articles, page=1, per_page=9):
     start_idx = (page - 1) * per_page
     end_idx = start_idx + per_page
     
+    # Add pagination range
+    if total_pages <= 10:
+        page_range = range(1, total_pages + 1)
+    else:
+        if page <= 5:
+            page_range = range(1, 11)
+        elif page > total_pages - 5:
+            page_range = range(total_pages - 9, total_pages + 1)
+        else:
+            page_range = range(page - 4, page + 6)
+            
     return {
         'articles': prepared_articles[start_idx:end_idx],
         'total_pages': total_pages,
         'current_page': page,
         'has_next': page < total_pages,
-        'total_articles': total_articles
+        'total_articles': total_articles,
+        'page_range': list(page_range)  # Add this
     }
-
 
 def calculate_cosine_similarity(query_vector, document_vector):
     all_terms = set(query_vector.keys()) | set(document_vector.keys())

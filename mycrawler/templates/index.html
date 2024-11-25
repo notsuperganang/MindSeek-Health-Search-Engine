@@ -63,14 +63,21 @@
 
             {% if has_next %}
             <div class="pagination-container">
-                {% for page in range(1, 10 + 1) %}
-                <a href="/?page={{ page }}" class="pagination-button" id="page-{{ page }}">{{ page }}</a>
-                {% endfor %}
-                {% if has_next %}
-                <a href="/?page={{ current_page + 1 }}" class="next-button">Berikutnya</a>
+                {% if current_page > 1 %}
+                <a href="/?page={{ current_page - 1 }}" class="next-button">Sebelumnya</a>
                 {% endif %}
-            </div>
 
+                {% for p in page_range %}
+                <a href="/?page={{ p }}" id="page-{{ p }}"
+                    class="pagination-button {% if p == current_page %}active{% endif %}">
+                    {{ p }}
+                </a>
+                {% endfor %}
+
+                {% if current_page < total_pages %} <a href="/?page={{ current_page + 1 }}" class="next-button">
+                    Berikutnya</a>
+                    {% endif %}
+            </div>
             {% endif %}
         </div>
     </div>
