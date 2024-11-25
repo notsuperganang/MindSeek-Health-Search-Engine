@@ -222,7 +222,7 @@ def search_results():
     
     # Format scores as percentages and ensure all required fields exist
     for result in results:
-        result['score'] = round(result['score'] * 100, 1)  # Convert to percentage
+        result['score'] = result['score']
         # Ensure image_url exists
         if not result.get('image_url') or result['image_url'] == "URL gambar tidak tersedia":
             result['image_url'] = "https://via.placeholder.com/400x200"
