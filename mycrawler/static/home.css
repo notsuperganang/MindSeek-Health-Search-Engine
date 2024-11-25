@@ -1,0 +1,678 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: #202124;
+    color: white;
+
+}
+
+/* Container pagination */
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    padding: 10px;
+    background: rgba(48, 49, 52, 0.3);
+    backdrop-filter: blur(8px);
+    border-radius: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Update font untuk pagination */
+.pagination-button,
+.next-button {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Style untuk button next */
+.next-button {
+    text-decoration: none;
+    color: #9aa0a6;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 20px;
+    border-radius: 25px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Hover effect untuk button next */
+.next-button:hover {
+    color: white;
+    background: rgba(66, 133, 244, 0.2);
+    transform: translateX(5px);
+    border-color: rgba(66, 133, 244, 0.3);
+    box-shadow:
+        0 4px 15px rgba(66, 133, 244, 0.2),
+        0 0 10px rgba(66, 133, 244, 0.3);
+}
+
+/* Efek hover untuk semua button */
+.pagination-button::before,
+.next-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(66, 133, 244, 0.2), rgba(135, 206, 235, 0.2));
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.pagination-button:hover::before,
+.next-button:hover::before {
+    opacity: 1;
+}
+
+/* Style untuk disabled state */
+.pagination-button:disabled,
+.next-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.pagination-button {
+    min-width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: #9aa0a6;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 50%;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    background: transparent;
+    border: 1px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Hover effect untuk button pagination */
+.pagination-button:hover {
+    color: white;
+    background: rgba(66, 133, 244, 0.2);
+    transform: translateY(-2px);
+    border-color: rgba(66, 133, 244, 0.3);
+    box-shadow:
+        0 4px 15px rgba(66, 133, 244, 0.2),
+        0 0 10px rgba(66, 133, 244, 0.3);
+}
+
+/* Style untuk button yang active */
+.pagination-button.active {
+    background: linear-gradient(135deg, #4285f4, #87CEEB);
+    color: white;
+    font-weight: 600;
+    border: none;
+    box-shadow:
+        0 4px 15px rgba(66, 133, 244, 0.3),
+        0 0 10px rgba(66, 133, 244, 0.4);
+}
+
+.next-button {
+    text-decoration: none;
+    color: #4285f4;
+    font-size: 16px;
+    padding: 8px 16px;
+    border-radius: 24px;
+    transition: background-color 0.3s;
+}
+
+.next-button:hover {
+    background-color: #357abd;
+    color: white;
+}
+
+#particles-js {
+    position: fixed;
+    /* Pastikan latar belakang tetap */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Isi tinggi penuh */
+    z-index: -1;
+    /* Tetap di belakang semua konten */
+}
+
+/* Animasi untuk particles */
+.particles-js-canvas-el {
+    animation: gradientBG 15s ease infinite;
+}
+
+@keyframes gradientBG {
+    0% {
+        filter: hue-rotate(0deg);
+    }
+
+    50% {
+        filter: hue-rotate(30deg);
+    }
+
+    100% {
+        filter: hue-rotate(0deg);
+    }
+}
+
+
+
+.container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 20px;
+    min-height: 100vh;
+    /* Sudah benar */
+    box-sizing: border-box;
+    /* Pastikan padding dihitung dalam tinggi */
+}
+
+.logo-container {
+    margin-top: 50px;
+    margin-bottom: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo {
+    font-family: 'Poppins', sans-serif;
+    font-size: 5rem;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 0;
+    /* Ubah margin bottom */
+    background: linear-gradient(135deg, #ffffff 0%, #4285f4 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.tagline {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 400;
+    background: linear-gradient(135deg, #ffffff 0%, #87CEEB 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 1.5px;
+    margin-bottom: 30px;
+    opacity: 0;
+    transform: translateY(-10px);
+    animation: fadeInUp 0.8s ease forwards;
+    animation-delay: 0.3s;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-container {
+    width: 100%;
+    max-width: 584px;
+    margin: 0 auto;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.4s ease;
+}
+
+.search-box-wrapper {
+    width: 100%;
+    position: relative;
+    margin-bottom: 10px;
+    backdrop-filter: blur(8px);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 24px;
+    padding: 4px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.search-box {
+    width: 100%;
+    padding: 16px 45px;
+    font-size: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    background-color: rgba(48, 49, 52, 0.7);
+    color: white;
+    outline: none;
+    box-sizing: border-box;
+    transition: all 0.4s ease;
+}
+
+
+.search-box-wrapper:hover,
+.search-box-wrapper:focus-within {
+    transform: translateY(-2px);
+    box-shadow:
+        0 8px 32px rgba(66, 133, 244, 0.3),
+        0 0 20px rgba(66, 133, 244, 0.4),
+        0 0 40px rgba(66, 133, 244, 0.2);
+}
+
+.search-box:hover,
+.search-box:focus {
+    background-color: rgba(48, 49, 52, 0.9);
+    border-color: #4285f4;
+    box-shadow: inset 0 0 20px rgba(66, 133, 244, 0.2);
+}
+
+/* Style untuk search icon */
+.search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9aa0a6;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    transition: all 0.4s ease;
+    z-index: 1;
+}
+
+/* Hover effect untuk search icon */
+.search-box-wrapper:hover .search-icon path,
+.search-box-wrapper:focus-within .search-icon path {
+    fill: #4285f4;
+    filter: drop-shadow(0 0 8px rgba(66, 133, 244, 0.5));
+}
+
+/* Styling untuk pesan error */
+.search-error {
+    color: #ff4444;
+    font-size: 14px;
+    text-align: center;
+    position: absolute;
+    width: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -40px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    background: #303134;
+    padding: 8px 16px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 1px 6px 0 rgba(32, 33, 36, 0.28);
+    border: 1px solid rgba(255, 68, 68, 0.3);
+}
+
+.search-box-wrapper.error {
+    box-shadow:
+        0 8px 32px rgba(255, 68, 68, 0.3),
+        0 0 20px rgba(255, 68, 68, 0.4),
+        0 0 40px rgba(255, 68, 68, 0.2);
+    border-color: rgba(255, 68, 68, 0.5);
+}
+
+/* Style untuk error state pada search box */
+.search-box.error-highlight {
+    background-color: rgba(48, 49, 52, 0.9);
+    border-color: rgba(255, 68, 68, 0.8);
+    box-shadow: inset 0 0 20px rgba(255, 68, 68, 0.2);
+}
+
+/* Style untuk error state pada search icon */
+.search-box-wrapper.error .search-icon path {
+    fill: rgba(255, 68, 68, 0.8);
+}
+
+.search-error.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+.search-error .warning-icon {
+    font-size: 20px;
+    margin-bottom: 4px;
+}
+
+.search-error .error-title {
+    font-weight: 600;
+    color: #ff4444;
+    margin-bottom: 2px;
+}
+
+.search-error .error-message {
+    color: #fff;
+    font-size: 13px;
+}
+
+/* Animasi shake yang smooth */
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    10%,
+    30%,
+    50%,
+    70%,
+    90% {
+        transform: translateX(-2px);
+    }
+
+    20%,
+    40%,
+    60%,
+    80% {
+        transform: translateX(2px);
+    }
+}
+
+.search-box.shake {
+    animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
+}
+
+/* Animasi untuk error state */
+.search-box.error-highlight {
+    background-color: rgba(255, 68, 68, 0.1);
+    border-color: rgba(255, 68, 68, 0.8);
+    box-shadow:
+        0 0 20px rgba(255, 68, 68, 0.3),
+        inset 0 0 20px rgba(255, 68, 68, 0.1);
+}
+
+.buttons-container {
+    margin-top: 30px;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+
+.search-button {
+    background: rgba(66, 133, 244, 0.1);
+    border: 1px solid rgba(66, 133, 244, 0.3);
+    border-radius: 12px;
+    color: #4285f4;
+    font-size: 14px;
+    padding: 12px 24px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    backdrop-filter: blur(4px);
+    position: relative;
+    overflow: hidden;
+}
+
+.search-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(66, 133, 244, 0), rgba(66, 133, 244, 0));
+    border-radius: 12px;
+    transition: all 0.4s ease;
+    z-index: -1;
+}
+
+.search-button:hover {
+    transform: translateY(-2px) scale(1.05);
+    color: white;
+    background: rgba(66, 133, 244, 0.2);
+    border-color: rgba(66, 133, 244, 0.5);
+    box-shadow:
+        0 8px 32px rgba(66, 133, 244, 0.3),
+        0 0 20px rgba(66, 133, 244, 0.4);
+}
+
+.search-button:hover::before {
+    background: linear-gradient(135deg, rgba(66, 133, 244, 0.8), rgba(135, 206, 235, 0.8));
+}
+
+
+.articles-container {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-bottom: 50px;
+}
+
+.articles-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 20px 0;
+}
+
+/* Update style untuk article cards dengan glow effect yang lebih agresif */
+.article-card {
+    background: rgba(48, 49, 52, 0.7);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+    position: relative;
+}
+
+.article-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 16px;
+    padding: 2px;
+    background: linear-gradient(135deg,
+            rgba(66, 133, 244, 0),
+            rgba(66, 133, 244, 0));
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    transition: all 0.4s ease;
+}
+
+.article-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    border-color: rgba(66, 133, 244, 0);
+    box-shadow:
+        0 8px 32px rgba(66, 133, 244, 0.3),
+        0 0 20px rgba(66, 133, 244, 0.4),
+        0 0 40px rgba(66, 133, 244, 0.2),
+        inset 0 0 20px rgba(66, 133, 244, 0.1);
+}
+
+.article-card:hover::before {
+    background: linear-gradient(135deg,
+            rgba(66, 133, 244, 0.5),
+            rgba(135, 206, 235, 0.5));
+}
+
+.article-image {
+    width: 100%;
+    height: 200px;
+    background-color: #4285f4;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: all 0.4s ease;
+}
+
+.article-card:hover .article-image {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
+.view-more-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+.view-more-button {
+    background-color: #4285f4;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 24px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.view-more-button:hover {
+    background-color: #357abd;
+    transform: translateY(-2px);
+}
+
+.article-content {
+    padding: 16px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.article-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.article-tags {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+}
+
+.article-card:hover .article-title {
+    background: linear-gradient(135deg, #4285f4, #87CEEB);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 8px rgba(66, 133, 244, 0.3);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.tag {
+    font-family: 'Poppins', sans-serif;
+    background-color: #4285f4;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    transition: all 0.3s ease;
+}
+
+.article-card:hover .tag {
+    background: linear-gradient(135deg, #4285f4, #87CEEB);
+    box-shadow: 0 0 10px rgba(66, 133, 244, 0.3);
+}
+
+.article-description {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    color: #9aa0a6;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex-grow: 1;
+}
+
+@media (max-width: 1024px) {
+    .articles-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+
+    .pagination-container {
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 8px;
+        border-radius: 25px;
+    }
+
+    .pagination-button {
+        min-width: 35px;
+        height: 35px;
+        font-size: 12px;
+    }
+
+    .next-button {
+        padding: 6px 16px;
+        font-size: 12px;
+    }
+
+    .articles-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .logo {
+        font-size: 3rem;
+    }
+
+    .tagline {
+        font-size: 1rem;
+    }
+
+    .buttons-container {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .search-button {
+        width: 100%;
+    }
+
+    .search-box {
+        padding: 12px 40px;
+    }
+}
