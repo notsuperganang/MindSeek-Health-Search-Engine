@@ -9,6 +9,11 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from sklearn.feature_extraction.text import TfidfVectorizer
 import re
+from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
+
+# Initialize stemmer
+factory = StemmerFactory()
+stemmer = factory.create_stemmer()
 
 # Download semua resource NLTK yang dibutuhkan
 try:
@@ -118,27 +123,29 @@ def calculate_jaccard_similarity(query_terms, document_terms):
     return intersection / union if union != 0 else 0
 
 def search(query, method='cosine'):
-    query_terms = query.lower().split()
+    # Stem query
+    query_words = query.lower().split()
+    stemmed_query_words = [stemmer.stem(word) for word in query_words]
+    
+    # Create query vector from stemmed words
     query_vector = defaultdict(float)
-    for term in query_terms:
+    for term in stemmed_query_words:
         query_vector[term] += 1
     
+    # Use existing TF-IDF index
     results = []
     for url, doc_vector in tfidf_index.items():
         similarity = calculate_cosine_similarity(query_vector, doc_vector) if method == 'cosine' else calculate_jaccard_similarity(query_vector, doc_vector)
         doc_data = next((doc for doc in crawled_data if doc['url'] == url), None)
         if doc_data and similarity > 0:
-            # Get tags from index instead of extracting
-            tags = tags_index.get(url, ['Artikel'])
-            
             results.append({
                 'url': url,
                 'title': doc_data.get('title', ''),
-                'content': doc_data.get('content', '')[:200] + '...',  # Preview
+                'content': doc_data.get('content', '')[:200] + '...',
                 'score': similarity,
                 'date': doc_data.get('date', 'N/A'),
                 'image_url': doc_data.get('image_url', ''),
-                'tags': tags
+                'tags': tags_index.get(url, ['Artikel'])
             })
     
     results.sort(key=lambda x: x['score'], reverse=True)
