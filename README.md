@@ -142,7 +142,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📬 Contact
 
-Your Name - [@notsuperganang](https://www.instagram.com/notsuperganang/) - ganangsetyohadi@gmail.com
+Ganang Setyo Hadi - [@notsuperganang](https://www.instagram.com/notsuperganang/) - ganangsetyohadi@gmail.com
 
 Project Link: [https://github.com/notsuperganang/MindSeek-Health-Search-Engine.git](https://github.com/notsuperganang/MindSeek-Health-Search-Engine.git)
 
