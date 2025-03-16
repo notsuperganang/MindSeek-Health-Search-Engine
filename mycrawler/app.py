@@ -5,8 +5,6 @@ import numpy as np
 from collections import defaultdict
 from datetime import datetime
 import nltk
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
 from sklearn.feature_extraction.text import TfidfVectorizer
 import re
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
